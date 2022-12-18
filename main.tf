@@ -102,15 +102,21 @@ resource "aws_security_group" "aws_ssrf_demo_security_group" {
 
 # key_pair
 resource "aws_key_pair" "aws_ssrf_demo_key_pair" {
-  key_name   = "aws_ssrf_demo_key"
+  key_name = "aws_ssrf_demo_key"
   public_key = file("~/.ssh/aws_ssrf_demo_key.pub")
 }
 
-# resource "aws_instance" "web" {
-#   ami           = data.aws_ami.ubuntu.id
-#   instance_type = "t3.micro"
 
-#   tags = {
-#     Name = "HelloWorld"
-#   }
-# }
+# aws_instacne
+resource "aws_instance" "aws_ssrf_demo_node" {
+  instance_type = "t2.micro"
+  ami           = data.aws_ami.ubuntu.id
+  
+  # metadata_options  {
+    
+  # }
+
+  tags = {
+    Name = "HelloWorld"
+  }
+}
