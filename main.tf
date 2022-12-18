@@ -31,3 +31,86 @@ resource "aws_internet_gateway" "aws_ssrf_demo_internet_gateway" {
   }
 
 }
+
+# route_table
+resource "aws_route_table" "aws_ssrf_demo_route_table" {
+  vpc_id = aws_vpc.aws_ssrf_demo_vpc.id
+
+  tags = {
+    Name = "aws_ssrf_demo_rt"
+
+  }
+
+}
+
+#route
+resource "aws_route" "aws_ssrf_demo_default_route" {
+  route_table_id         = aws_route_table.aws_ssrf_demo_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.aws_ssrf_demo_internet_gateway.id
+}
+
+# route_table_association
+resource "aws_route_table_association" "aws_ssrf_demo_public_association" {
+  subnet_id      = aws_subnet.aws_ssrf_demo_public_subnet.id
+  route_table_id = aws_route_table.aws_ssrf_demo_route_table.id
+
+}
+
+# security groups
+
+resource "aws_security_group" "aws_ssrf_demo_security_group" {
+  name        = "aws_ssrf_demo_sg"
+  description = "ssrf demo securitygroup"
+  vpc_id      = aws_vpc.aws_ssrf_demo_vpc.id
+
+  ingress {
+    # description      = "TLS from VPC"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  #To add instead of ingress above
+  #   resource "aws_security_group_rule" "aws_ssrf_demo_web" {
+  #   type              = "ingress"
+  #   from_port         = 80
+  #   to_port           = 443
+  #   protocol          = "tcp"
+  #   cidr_blocks       = ["0.0.0.0/0"]
+  #   security_group_id = aws_security_group.aws_ssrf_demo_security_group.id
+  # }
+
+  # resource "aws_security_group_rule" "aws_ssrf_demo_ssh" {
+  #   type              = "ingress"
+  #   from_port         = 22
+  #   to_port           = 22
+  #   protocol          = "tcp"
+  #   cidr_blocks       = ["0.0.0.0/0"]
+  #   security_group_id = aws_security_group.aws_ssrf_demo_security_group.id
+  # }
+
+}
+
+# key_pair
+resource "aws_key_pair" "aws_ssrf_demo_key_pair" {
+  key_name   = "aws_ssrf_demo_key"
+  public_key = file("~/.ssh/aws_ssrf_demo_key.pub")
+}
+
+# resource "aws_instance" "web" {
+#   ami           = data.aws_ami.ubuntu.id
+#   instance_type = "t3.micro"
+
+#   tags = {
+#     Name = "HelloWorld"
+#   }
+# }
