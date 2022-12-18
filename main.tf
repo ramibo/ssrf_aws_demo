@@ -65,9 +65,8 @@ resource "aws_security_group" "aws_ssrf_demo_security_group" {
   vpc_id      = aws_vpc.aws_ssrf_demo_vpc.id
 
   ingress {
-    # description      = "TLS from VPC"
-    from_port   = 0
-    to_port     = 0
+    from_port   = 22
+    to_port     = 443
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -75,7 +74,7 @@ resource "aws_security_group" "aws_ssrf_demo_security_group" {
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -102,21 +101,31 @@ resource "aws_security_group" "aws_ssrf_demo_security_group" {
 
 # key_pair
 resource "aws_key_pair" "aws_ssrf_demo_key_pair" {
-  key_name = "aws_ssrf_demo_key"
+  key_name   = "aws_ssrf_demo_key"
   public_key = file("~/.ssh/aws_ssrf_demo_key.pub")
 }
 
 
 # aws_instacne
 resource "aws_instance" "aws_ssrf_demo_node" {
-  instance_type = "t2.micro"
-  ami           = data.aws_ami.ubuntu.id
-  
-  # metadata_options  {
-    
-  # }
+  instance_type               = "t2.micro"
+  ami                         = data.aws_ami.ubuntu.id
+  associate_public_ip_address = true
+
+  key_name               = aws_key_pair.aws_ssrf_demo_key_pair.key_name
+  vpc_security_group_ids = [aws_security_group.aws_ssrf_demo_security_group.id]
+  subnet_id              = aws_subnet.aws_ssrf_demo_public_subnet.id
+  user_data              = templatefile("userdata.tpl", {})
+
+  root_block_device {
+    volume_size = 10
+  }
 
   tags = {
-    Name = "HelloWorld"
+    Name = "aws_ssrf_demo_nd"
   }
+
+  # metadata_options  {
+  # }
+
 }
