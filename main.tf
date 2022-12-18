@@ -67,14 +67,14 @@ resource "aws_security_group" "aws_ssrf_demo_security_group" {
   ingress {
     from_port   = 22
     to_port     = 443
-    protocol    = "-1"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "tcp"
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
