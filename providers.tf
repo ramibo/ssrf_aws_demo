@@ -8,7 +8,10 @@ terraform {
 }
 
 provider "aws" {
+
   shared_config_files      = ["$HOME/.aws/config"]
   shared_credentials_files = ["$HOME/.aws/credentials"]
-  profile                  = "aws_ssrf_demo"
+  profile= "aws_ssrf_demo_profile"
+  region = "us-east-2"
+
 }
