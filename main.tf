@@ -128,4 +128,16 @@ resource "aws_instance" "aws_ssrf_demo_node" {
   # metadata_options  {
   # }
 
+  #Adding VScode remote connection-not for production !
+  #To addsh connection to .ssh/config .
+  #Need to run command: terraform apply -replace aws_instance.aws_ssrf_demo_node 
+  provisioner "local-exec" {
+    command = templatefile("ssh-config.tpl", { #tpl file is in unix format
+      hostname = self.public_ip,
+      user     = "ubuntu",
+    identityfile = "~/.ssh/aws_ssrf_demo_key" })
+    # interpreter = ["bash", "-c"] # linux default
+  }
+
 }
+
