@@ -17,4 +17,4 @@ python3 -m pip install requests
 python3 -m flask run --host=0.0.0.0
 
 git clone https://github.com/ramibo/ssrf_aws_demo.git
-python3 /ssrf_aws_demo/ssrf_vuln_app/app.py
+python3 -m /ssrf_aws_demo/ssrf_vuln_app/app.py
