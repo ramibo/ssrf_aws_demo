@@ -105,32 +105,67 @@ resource "aws_key_pair" "aws_ssrf_demo_key_pair" {
   public_key = file("~/.ssh/aws_ssrf_demo_key.pub")
 }
 
-# # iam_role?
-# resource "aws_iam_instance_profile" "aws_ssrf_demo_instacne_profile" {
-#   name = "aws_ssrf_demo_instacne_profile"
-#   role = aws_iam_role.aws_ssrf_demo_iam_role.name
-# }
+#================================================================================
+#https://cloudkatha.com/how-to-attach-an-iam-role-to-ec2-instance-using-terraform/
+# Create IAM policy with required permission
+resource "aws_iam_policy" "aws_ssrf_demo_s3_policy" {
+  name        = "S3_Bucket_Access_Policy"
+  description = "Provides permission to access S3"
 
-# resource "aws_iam_role" "aws_ssrf_demo_iam_role" {
-#   name = "aws_ssrf_demo_iam_role"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:GetObject",
+        ]
+        Effect = "Allow"
+        Resource = [
 
-#   assume_role_policy = <<EOF
-# {
-#     "Version": "2012-10-17",
-#     "Statement": [
-#         {
-#             "Action": "sts:AssumeRole",
-#             "Principal": {
-#                "Service": "ec2.amazonaws.com"
-#             },
-#             "Effect": "Allow",
-#             "Sid": ""
-#         }
-#     ]
-# }
-# EOF
-# }
+        "arn:aws:s3:::demo-talk-with-anu/*"]
+      },
+    ]
+  })
+}
 
+# Create an IAM role for EC2 Instance
+resource "aws_iam_role" "aws_ssrf_demo_iam_role" {
+  name = "aws_ssrf_demo_iam_role"
+
+  assume_role_policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Action" : "sts:AssumeRole",
+          "Principal" : {
+            "Service" : "ec2.amazonaws.com"
+          },
+          "Effect" : "Allow",
+          "Sid" : ""
+        }
+      ]
+  })
+
+}
+
+# Attach the Policy to the created IAM role
+resource "aws_iam_policy_attachment" "aws_ssrf_demo_attach" {
+  name       = "aws_ssrf_demo_attach"
+  roles      = [aws_iam_role.aws_ssrf_demo_iam_role.name]
+  policy_arn = aws_iam_policy.aws_ssrf_demo_s3_policy.arn
+}
+
+# Create an instance profile using role
+
+resource "aws_iam_instance_profile" "aws_ssrf_demo_instacne_profile" {
+  name = "aws_ssrf_demo_instacne_profile"
+  role = aws_iam_role.aws_ssrf_demo_iam_role.name
+}
+
+
+
+#================================================================================
 # aws_instacne
 resource "aws_instance" "aws_ssrf_demo_node" {
   instance_type               = "t2.micro"
@@ -143,7 +178,8 @@ resource "aws_instance" "aws_ssrf_demo_node" {
   subnet_id              = aws_subnet.aws_ssrf_demo_public_subnet.id
   user_data              = templatefile("userdata.tpl", {})
 
-  # iam_instance_profile =
+  # Attach the Instance Profile to EC2
+  iam_instance_profile = aws_iam_instance_profile.aws_ssrf_demo_instacne_profile.name
 
   root_block_device {
     volume_size = 10
