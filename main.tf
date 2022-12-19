@@ -66,7 +66,7 @@ resource "aws_security_group" "aws_ssrf_demo_security_group" {
 
   ingress {
     from_port   = 22
-    to_port     = 443
+    to_port     = 5000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -107,6 +107,7 @@ resource "aws_key_pair" "aws_ssrf_demo_key_pair" {
 
 #================================================================================
 #https://cloudkatha.com/how-to-attach-an-iam-role-to-ec2-instance-using-terraform/
+
 # Create IAM policy with required permission
 resource "aws_iam_policy" "aws_ssrf_demo_s3_policy" {
   name        = "S3_Bucket_Access_Policy"
