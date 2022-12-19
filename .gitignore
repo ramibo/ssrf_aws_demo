@@ -1,0 +1,17 @@
+# make target file types
+*.exe
+
+# IDEs
+*.code-workspace
+.idea/
+.vs/
+.vscode/
+
+# Misc
+*.gpg
+a.txt
+
+
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
