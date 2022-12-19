@@ -105,6 +105,31 @@ resource "aws_key_pair" "aws_ssrf_demo_key_pair" {
   public_key = file("~/.ssh/aws_ssrf_demo_key.pub")
 }
 
+# # iam_role?
+# resource "aws_iam_instance_profile" "aws_ssrf_demo_instacne_profile" {
+#   name = "aws_ssrf_demo_instacne_profile"
+#   role = aws_iam_role.aws_ssrf_demo_iam_role.name
+# }
+
+# resource "aws_iam_role" "aws_ssrf_demo_iam_role" {
+#   name = "aws_ssrf_demo_iam_role"
+
+#   assume_role_policy = <<EOF
+# {
+#     "Version": "2012-10-17",
+#     "Statement": [
+#         {
+#             "Action": "sts:AssumeRole",
+#             "Principal": {
+#                "Service": "ec2.amazonaws.com"
+#             },
+#             "Effect": "Allow",
+#             "Sid": ""
+#         }
+#     ]
+# }
+# EOF
+# }
 
 # aws_instacne
 resource "aws_instance" "aws_ssrf_demo_node" {
@@ -112,10 +137,13 @@ resource "aws_instance" "aws_ssrf_demo_node" {
   ami                         = data.aws_ami.ubuntu.id
   associate_public_ip_address = true
 
+
   key_name               = aws_key_pair.aws_ssrf_demo_key_pair.key_name
   vpc_security_group_ids = [aws_security_group.aws_ssrf_demo_security_group.id]
   subnet_id              = aws_subnet.aws_ssrf_demo_public_subnet.id
   user_data              = templatefile("userdata.tpl", {})
+
+  # iam_instance_profile =
 
   root_block_device {
     volume_size = 10
