@@ -11,43 +11,28 @@ The environment will be deployed with Terraform IaC module.
 
 
 ## Prerequisites
-* Active AWS account
+* Active AWS account.
 * AWS IAM user with AWS credential type: ["Access key - Programmatic access"](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) and [AdministratorAccess](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html)
 
 *  [Terraform installed](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-
-* update main.tf with : region , key-pair , instacne profile
-* update providers.tf with profile , region
-
-
-
-
-##Providers version
+* Clone this repo to the enviromet which you run terraform from :
+```ShellSession
+git clone https://github.com/ramibo/ssrf_aws_demo.git 
 ```
-Terraform v1.0.1
-```
+
+* Optional - In the following files ,set the paramters with your values :
+**main.tf: `availability_zone` , `resource "aws_key_pair"{public_key}`
+**providers.tf: `shared_config_files`,`shared_credentials_files` `profile` , `region`
+
+
 
 ## How to run this code
 
-- Clone this repo to the enviromet which you run terraform from.
-- cd to the the directory secure-s3-deployment
-- use terraform __init__ command prepare your working directory for other commands
-- terraform __validate__ command check whether the configuration is valid
-- terraform __plan__ command show changes required by the current configuration
-- terraform __apply__ create or update infrastructure
-- Alternate command : terraform apply -auto-approve
-- terraform __destroy__ destroy previously-created infrastructure
-- Alternate command : terraform destroy -auto-approve
-- terraform __fmt__ reformat your configuration in the standard style
-
-- Update the unique bucket name in the __variable.tf__ file
-
-```
-
-bucket_name = "unique-backet-name"
-target_bucket = "unique-backet-name"
-
-```
+1. `cd` to the  `ssrf_aws_demo` directory.
+2. Run `terraform init` command to prepare your working directory for next commands.
+3. Run `terraform validate` command check whether the configuration is valid.
+4. Run `terraform plan` command show changes required by the current configuration.
+5. Run `terraform apply` / `terraform apply -auto-approve` to create / update the infrastructure at AWS
 
 ## Mitigation Steps
 
