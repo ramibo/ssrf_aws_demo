@@ -110,7 +110,7 @@ total 8
 !!! The SSRF attack was sucessfull !!!
 ```
 
-12.Run `terraform destroy` / `terraform destroy -auto-approve` to remove the infrastructure created at AWS.
+12. Run `terraform destroy` / `terraform destroy -auto-approve` to remove the infrastructure created at AWS.
 ## Mitigation Steps
 
 1. Enabling IMDS version 2 of the service
