@@ -20,9 +20,9 @@ The environment will be deployed with Terraform IaC module.
 git clone https://github.com/ramibo/ssrf_aws_demo.git 
 ```
 
-* Optional - In the following files ,set the paramters with your values :
-**main.tf: `availability_zone` , `resource "aws_key_pair"{public_key}`
-**providers.tf: `shared_config_files`,`shared_credentials_files` `profile` , `region`
+* Optional - In the following files ,set the paramters with your values : 
+main.tf: `availability_zone` , `resource "aws_key_pair"{public_key}`
+providers.tf: `shared_config_files`,`shared_credentials_files` `profile` , `region`
 
 
 
