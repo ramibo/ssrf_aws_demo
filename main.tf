@@ -120,10 +120,8 @@ resource "aws_iam_policy" "aws_ssrf_demo_s3_policy" {
         Action = [
           "s3:GetObject",
         ]
-        Effect = "Allow"
-        Resource = [
-
-        "arn:aws:s3:::demo-talk-with-anu/*"]
+        Effect   = "Allow"
+        Resource = "*"
       },
     ]
   })
@@ -142,12 +140,13 @@ resource "aws_iam_role" "aws_ssrf_demo_iam_role" {
           "Principal" : {
             "Service" : "ec2.amazonaws.com"
           },
-          "Effect" : "Allow",
-          "Sid" : ""
+          "Effect" : "Allow"
         }
       ]
   })
-
+  tags = {
+    tag-key = "aws_ssrf_demo_ir"
+  }
 }
 
 # Attach the Policy to the created IAM role
@@ -165,8 +164,8 @@ resource "aws_iam_instance_profile" "aws_ssrf_demo_instacne_profile" {
 }
 
 
-
 #================================================================================
+
 # aws_instacne
 resource "aws_instance" "aws_ssrf_demo_node" {
   instance_type               = "t2.micro"
@@ -206,3 +205,9 @@ resource "aws_instance" "aws_ssrf_demo_node" {
 
 }
 
+# aws s3 bucket
+
+resource "aws_s3_bucket" "aws_ssrf_demo_s3_bucket" {
+
+
+}
