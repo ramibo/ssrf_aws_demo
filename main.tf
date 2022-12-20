@@ -207,7 +207,7 @@ resource "aws_instance" "aws_ssrf_demo_node" {
 
 # aws s3 bucket
 
-resource "aws_s3_bucket" "aws_ssrf_demo_s3_bucket" {
+# resource "aws_s3_bucket" "aws_ssrf_demo_s3_bucket" {
 
 
-}
+# }
