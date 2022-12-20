@@ -2,10 +2,10 @@
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
 
 ## Demo diagram 
-![Diagram]()
+![Diagram](/images/diagram.jpg)
 
 ## Purpose
-Demonstrate a Server Side Request Forgery (SSRF) attack in the AWS environment, similar to the [CapitalOne breach](https://www.capitalone.com/digital/facts2019/).
+Demonstrate a Server Side Request Forgery (SSRF) attack in the AWS environment which results in data rertviing from s3, similar to the [CapitalOne breach](https://www.capitalone.com/digital/facts2019/).
 The environment will be deployed with Terraform IaC module.
 
 
