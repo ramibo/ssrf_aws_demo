@@ -118,7 +118,7 @@ resource "aws_iam_policy" "aws_ssrf_demo_s3_policy" {
     Statement = [
       {
         Action = [
-          "s3:GetObject",
+          "s3:*",
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -207,7 +207,21 @@ resource "aws_instance" "aws_ssrf_demo_node" {
 
 # aws s3 bucket
 
-# resource "aws_s3_bucket" "aws_ssrf_demo_s3_bucket" {
+resource "aws_s3_bucket" "aws_ssrf_demo_s3_bucket" {
+  bucket        = "aws-ssrf-demo-s3-bucket"
+  force_destroy = true
+}
 
+resource "aws_s3_bucket_acl" "acl" {
+  bucket = aws_s3_bucket.aws_ssrf_demo_s3_bucket.id
+  acl    = "private"
+}
 
-# }
+# Upload the secret file
+resource "aws_s3_object" "aws_ssrf_demo_object" {
+  bucket = aws_s3_bucket.aws_ssrf_demo_s3_bucket.id
+  key    = "aws_ssrf_demo_data_file.json"
+  source = "${path.module}/content/aws_ssrf_demo_data_file.json"
+  etag   = filemd5("${path.module}/content/aws_ssrf_demo_data_file.json")
+}
+
