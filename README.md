@@ -38,8 +38,8 @@ providers.tf : `shared_config_files`,`shared_credentials_files`, `profile` , `re
 
 5. Run `terraform apply` / `terraform apply -auto-approve` to create / update the infrastructure at AWS.
 
-6. If there no errors from the prvious steps , from your terminal run the following :
-__Important 1__ - The `host` can be the created ec2 instance [Public IPv4 address / DNS ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses). 
+6. If there no errors from the prvious steps , from your terminal run the following :<br>
+__Important 1__ - The `host` can be the created ec2 instance [Public IPv4 address / DNS ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses).<br>
 __Important 2__ - In the next steps `bash$` prompt with `"command"` is for commands  you need to run.
 ```ShellSession
 bash$ curl -s http://host:5000 
