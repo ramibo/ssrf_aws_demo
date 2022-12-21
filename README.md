@@ -19,10 +19,9 @@ The environment will be deployed with Terraform IaC module.
 ```ShellSession
 git clone https://github.com/ramibo/ssrf_aws_demo.git 
 ```
+* [create a key pair ( the public key will be auto imported later to Amazon EC2 by terrafom ).](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html)
 
-* Optional - In the following files , set the parameters with your values :  
-main.tf : `availability_zone` , `resource "aws_key_pair"{public_key}`  
-providers.tf : `shared_config_files`,`shared_credentials_files`, `profile` , `region`
+* In the following files , set the parameters with your own values  :</br></br>__terraform.tfvars__:</br> `availability_zone` , `key_name`,`public_key`</br></br>__providers.tf__ :</br> `shared_config_files`,`shared_credentials_files`, `profile` , `region`
 
 
 
@@ -38,9 +37,9 @@ providers.tf : `shared_config_files`,`shared_credentials_files`, `profile` , `re
 
 5. Run `terraform apply` / `terraform apply -auto-approve` to create/update the infrastructure at AWS.
 
-6. If there are no errors from the previous steps , from your terminal, run the following:<br>
-__Important 1__ - The `host` can be the created ec2 instance [Public IPv4 address / DNS ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses).<br>
-__Important 2__ - In the next steps `bash$` prompt with `"command"` is for commands you need to run.
+6. If there are no errors from the previous steps , from your terminal, run the following:
+<br>__Important__<br> - The `host` can be the created ec2 instance [Public IPv4 address / DNS ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses).<br>- In the next steps `bash$` prompt with `"command"` is for commands you need to run.
+
 ```ShellSession
 bash$ curl -s http://host:5000 
 AWS SSRF IMDSv1 demo

@@ -15,7 +15,7 @@ resource "aws_subnet" "aws_ssrf_demo_public_subnet" {
   vpc_id                  = aws_vpc.aws_ssrf_demo_vpc.id
   cidr_block              = "10.123.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-2a"
+  availability_zone       = var.availability_zone
 
   tags = {
     Name = "aws_ssrf_demo_public"
@@ -101,8 +101,8 @@ resource "aws_security_group" "aws_ssrf_demo_security_group" {
 
 # key_pair
 resource "aws_key_pair" "aws_ssrf_demo_key_pair" {
-  key_name   = "aws_ssrf_demo_key"
-  public_key = file("~/.ssh/aws_ssrf_demo_key.pub")
+  key_name   = var.key_name
+  public_key = file("~/.ssh/${var.public_key}")
 }
 
 #================================================================================
@@ -192,16 +192,16 @@ resource "aws_instance" "aws_ssrf_demo_node" {
   # metadata_options  {
   # }
 
-  # # Adding VScode remote connection-not for production !
-  # # To addsh connection to .ssh/config .
-  # # Need to run command: terraform apply -replace aws_instance.aws_ssrf_demo_node 
-  # provisioner "local-exec" {
-  #   command = templatefile("ssh-config.tpl", { #tpl file is in unix format
-  #     hostname = self.public_ip,
-  #     user     = "ubuntu",
-  #   identityfile = "~/.ssh/aws_ssrf_demo_key" })
-  #   # interpreter = ["bash", "-c"] # linux default
-  # }
+  # Adding VScode remote connection-not for production !
+  # To addsh connection to .ssh/config .
+  # Need to run command: terraform apply -replace aws_instance.aws_ssrf_demo_node 
+  provisioner "local-exec" {
+    command = templatefile("ssh-config.tpl", { #tpl file is in unix format
+      hostname = self.public_ip,
+      user     = "ubuntu",
+    identityfile = "~/.ssh/aws_ssrf_demo_key" })
+    # interpreter = ["bash", "-c"] # linux default
+  }
 
 }
 
