@@ -179,8 +179,17 @@ def url():
             content = requests.get(valid_url).text
             return (content)
 ```
-3. Reduce permissions in the IAM role.</br>
+3. Reduce permissions in the IAM role towards the s3 bucket.</br>
 For example:</br>
+```console
+{
+        Action = [
+          "s3:*", #--> set specifc avtion like "s3:ListAllMyBuckets",
+        ]
+        Effect   = "Allow"
+        Resource = "*" #--> set specific bucket name like "arn:aws:s3:::mys3bucket/*"
+      },
+```
 
 
 ## Refrences
