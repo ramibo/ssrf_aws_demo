@@ -168,11 +168,16 @@ def url():
 #validation code
 @app.route('/uptime')
 def url():
+    DENYURL = "url=http://169.254.169.254/latest/meta-data/iam/security-credentials/"
     url = request.args.get('url', '')
-    valid_url = quote(url, safe='/:?&')
-    if valid_url:
-        content = requests.get(valid_url).text
-        return (content)
+    
+    if url:
+        if DENYURL in url:
+               raise ValueError
+
+        else:
+            content = requests.get(valid_url).text
+            return (content)
 ```
 3. Reduce permissions in the IAM role.</br>
 For example:</br>
