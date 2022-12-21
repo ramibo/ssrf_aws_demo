@@ -5,7 +5,7 @@
 ![Diagram](/images/diagram.jpg)
 
 ## Purpose
-Demonstrate a Server Side Request Forgery (SSRF) attack in the AWS environment which results in data rertviing from s3, similar to the [CapitalOne breach](https://www.capitalone.com/digital/facts2019/).
+Demonstrate a Server Side Request Forgery (SSRF) attack in the AWS environment, which results in data retrieving from s3, similar to the [CapitalOne breach](https://www.capitalone.com/digital/facts2019/).
 The environment will be deployed with Terraform IaC module.
 
 
@@ -19,7 +19,7 @@ The environment will be deployed with Terraform IaC module.
 ```console
 git clone https://github.com/ramibo/ssrf_aws_demo.git 
 ```
-* [create a key pair ( the public key will be auto imported later to Amazon EC2 by terrafom ).](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html)
+* [create a key pair ( the public key will be auto imported later to Amazon EC2 by terraform ).](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html)
 
 * In the following files , set the parameters with your own values  :</br></br>__terraform.tfvars__:</br> `availability_zone` , `key_name`,`public_key`</br></br>__providers.tf__ :</br> `shared_config_files`,`shared_credentials_files`, `profile` , `region`
 
@@ -116,8 +116,8 @@ total 8
 
 1. Enabling IMDSv2 :</br> 
 This step enforces requests to use a session token (applied in aws-ec2-metadata-token header ) that can only be used directly from the EC2 instance where that session began.</br> 
-This step is the first that should be taken as the IMDSv2 service acts as a parallel layer to any application or web app firewall (WAF) vulnerblity / misconfiugration which we might not be aware of yet.</br>  
-In addtion , the effort to apply it is minor ( updated AWS SDKs and CLIs) compared to the next options.</br>  
+This step is the first that should be taken as the IMDSv2 service acts as a parallel layer to any application or web app firewall (WAF) vulnerability/misconfiguration which we might not be aware of yet.</br>  
+In addition , the effort to apply it is minor ( updated AWS SDKs and CLIs) compared to the next options.</br>  
 For our case (before `terraform destroy` ) run :
 
 
@@ -154,7 +154,7 @@ bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-dat
 ```
 [More details on how to configure the instance metadata options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-options.html).
 
-2. Fix the application  ruuning in the ec2 instance by adding validation all client-supplied input data.</br>
+2. Fix the application running in the ec2 instance by adding validation all client-supplied input data.</br>
 For example , 
 ```python
 #vulnerable code
@@ -192,7 +192,7 @@ For example:</br>
 ```
 
 
-## Refrences
+## References
 * [FreeCodeCamp - Learn Terraform (and AWS) by Building a Dev Environment – Full Course for Beginners](https://www.youtube.com/watch?v=iRaai1IBlB0)
 * [An SSRF, privileged AWS keys and the Capital One breach](https://blog.appsecco.com/an-ssrf-privileged-aws-keys-and-the-capital-one-breach-4c3c2cded3af)
 * [How to hack AWS instances that have the metadata service (IMDSv1) enabled](https://alexanderhose.com/how-to-hack-aws-instances-with-the-metadata-service-enabled/)
