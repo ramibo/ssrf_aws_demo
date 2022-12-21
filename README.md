@@ -184,7 +184,7 @@ For example:</br>
 ```console
 {
         Action = [
-          "s3:*", #--> set specifc avtion like "s3:ListAllMyBuckets",
+          "s3:*", #--> set specific action like "s3:ListAllMyBuckets",
         ]
         Effect   = "Allow"
         Resource = "*" #--> set specific bucket name like "arn:aws:s3:::mys3bucket/*"
