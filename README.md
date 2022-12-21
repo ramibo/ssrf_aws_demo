@@ -117,7 +117,7 @@ total 8
 1. Enabling IMDSv2 :</br> 
 This step enforces requests to use a session token (applied in aws-ec2-metadata-token header ) that can only be used directly from the EC2 instance where that session began.</br> 
 This step is the first that should be taken as the IMDSv2 service acts as a parallel layer to any application or web app firewall (WAF) vulnerblity / misconfiugration which we might not be aware of yet.</br>  
-In addtion , the effort to apply it is lower ( updated AWS SDKs and CLIs) compared to the next options.</br>  
+In addtion , the effort to apply it is minor ( updated AWS SDKs and CLIs) compared to the next options.</br>  
 For our case (before `terraform destroy` ) run :
 
 
@@ -154,10 +154,29 @@ bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-dat
 ```
 [More details on how to configure the instance metadata options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-options.html).
 
-2. Fix the application  ruuning in the ec2 instance by adding validation all client-supplied input data.
-For example
+2. Fix the application  ruuning in the ec2 instance by adding validation all client-supplied input data.</br>
+For example , 
+```python
+#vulnerable code
+@app.route('/uptime')
+def url():
+    url = request.args.get('url', '')
+    if url:
+        content = requests.get(url).text
+        return (content)
 
-3. Reduce permissions in the IAM role
+#validation code
+@app.route('/uptime')
+def url():
+    url = request.args.get('url', '')
+    valid_url = quote(url, safe='/:?&')
+    if valid_url:
+        content = requests.get(valid_url).text
+        return (content)
+```
+3. Reduce permissions in the IAM role.</br>
+For example:</br>
+
 
 ## Refrences
 * [FreeCodeCamp - Learn Terraform (and AWS) by Building a Dev Environment – Full Course for Beginners](https://www.youtube.com/watch?v=iRaai1IBlB0)

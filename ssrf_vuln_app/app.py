@@ -10,8 +10,9 @@ def home():
 @app.route('/uptime')
 def url():
     url = request.args.get('url', '')
-    if url:
-        content = requests.get(url).text
+    valid_url = quote(url, safe='/:?&')
+    if valid_url:
+        content = requests.get(valid_url).text
         return (content)
 
     return "Please provide an url"
