@@ -113,13 +113,30 @@ total 8
 12. Run `terraform destroy` / `terraform destroy -auto-approve` to remove the infrastructure created at AWS.
 ## Mitigation Steps
 
-1. Enabling IMDS version 2 of the service
 
-2. Fix the application by sanitizing/validating all client-supplied input data.
 
-3. dfgsd
+1. Enabling IMDSv2 - enforces requests to use a session token (applied in aws-ec2-metadata-token header ) that can only be used directly from the EC2 instance where that session began.
+This step is the first that should be taken as the IMDSv2 service acts as a parallel layer to any application or web app firewall (WAF) vulnerblity / misconfiugration which we might not be aware of yet.
+In addtion , the effort to apply it is lower ( updated AWS SDKs and CLIs) compared to the next options
+
+For our case (before `terraform destroy` ) run :
+
+[More details on how to configure the instance metadata options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-options.html).
+```ShellSession
+aws ec2 modify-instance-metadata-options \
+    --instance-id i-1234567898abcdef0 \
+    --http-tokens required \
+    --http-endpoint enabled
+```
+
+2. Fix the application  ruuning in the ec2 instance by adding validation all client-supplied input data.
+For example
+
+3. Reduce permissions in the IAM role
 
 ## Refrences
 * [FreeCodeCamp - Learn Terraform (and AWS) by Building a Dev Environment – Full Course for Beginners](https://www.youtube.com/watch?v=iRaai1IBlB0)
 * [An SSRF, privileged AWS keys and the Capital One breach](https://blog.appsecco.com/an-ssrf-privileged-aws-keys-and-the-capital-one-breach-4c3c2cded3af)
 * [How to hack AWS instances that have the metadata service (IMDSv1) enabled](https://alexanderhose.com/how-to-hack-aws-instances-with-the-metadata-service-enabled/)
+
+* https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/
