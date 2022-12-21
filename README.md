@@ -114,9 +114,10 @@ total 8
 
 
 
-1. Enabling IMDSv2 - enforces requests to use a session token (applied in aws-ec2-metadata-token header ) that can only be used directly from the EC2 instance where that session began.
-This step is the first that should be taken as the IMDSv2 service acts as a parallel layer to any application or web app firewall (WAF) vulnerblity / misconfiugration which we might not be aware of yet.
-In addtion , the effort to apply it is lower ( updated AWS SDKs and CLIs) compared to the next options.
+1. Enabling IMDSv2 : 
+This step enforces requests to use a session token (applied in aws-ec2-metadata-token header ) that can only be used directly from the EC2 instance where that session began. 
+This step is the first that should be taken as the IMDSv2 service acts as a parallel layer to any application or web app firewall (WAF) vulnerblity / misconfiugration which we might not be aware of yet. 
+In addtion , the effort to apply it is lower ( updated AWS SDKs and CLIs) compared to the next options. 
 For our case (before `terraform destroy` ) run :
 
 
