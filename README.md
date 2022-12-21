@@ -117,17 +117,42 @@ total 8
 
 1. Enabling IMDSv2 - enforces requests to use a session token (applied in aws-ec2-metadata-token header ) that can only be used directly from the EC2 instance where that session began.
 This step is the first that should be taken as the IMDSv2 service acts as a parallel layer to any application or web app firewall (WAF) vulnerblity / misconfiugration which we might not be aware of yet.
-In addtion , the effort to apply it is lower ( updated AWS SDKs and CLIs) compared to the next options
-
+In addtion , the effort to apply it is lower ( updated AWS SDKs and CLIs) compared to the next options.
 For our case (before `terraform destroy` ) run :
 
-[More details on how to configure the instance metadata options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-options.html).
+
 ```ShellSession
 aws ec2 modify-instance-metadata-options \
     --instance-id i-1234567898abcdef0 \
     --http-tokens required \
     --http-endpoint enabled
 ```
+
+For example
+```ShellSession
+bash$ curl -s http://host:5000
+AWS SSRF IMDSv1 demo
+
+bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/
+aws_ssrf_demo_iam_role 
+
+bash$ aws ec2 modify-instance-metadata-options --instance-id i-00d044e5f852fd277 --http-tokens required --http-endpoint enabled --profile aws_ssrf_demo_profile
+
+bash$ curl -s http://host:5000/uptime?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>401 - Unauthorized</title>
+ </head>
+ <body>
+  <h1>401 - Unauthorized</h1>
+ </body>
+</html>
+
+```
+[More details on how to configure the instance metadata options](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-options.html).
 
 2. Fix the application  ruuning in the ec2 instance by adding validation all client-supplied input data.
 For example
